@@ -27,8 +27,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    linear-gradient(90deg, rgba(18, 49, 44, 0.05) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(18, 49, 44, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 49, 44, 0.035) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(18, 49, 44, 0.035) 1px, transparent 1px),
     #f5f7fb;
   background-size: 42px 42px;
 }
@@ -57,15 +57,15 @@ p {
 h1 {
   margin: 0;
   color: #0f1e1c;
-  font-size: 3.75rem;
-  line-height: 1.03;
-  font-weight: 840;
+  font-size: 2.95rem;
+  line-height: 1.08;
+  font-weight: 810;
 }
 
 h2 {
   margin: 0;
   color: #10211e;
-  font-size: 2.25rem;
+  font-size: 2.08rem;
   line-height: 1.12;
   font-weight: 810;
 }
@@ -188,11 +188,11 @@ h3 {
 
 .home-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.93fr) minmax(420px, 1.07fr);
-  align-items: center;
-  gap: 44px;
-  min-height: 650px;
-  padding: 58px 0 46px;
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 1fr);
+  align-items: start;
+  gap: 56px;
+  min-height: 590px;
+  padding: 68px 0 56px;
 }
 
 .page-hero {
@@ -202,21 +202,31 @@ h3 {
 
 .hero-copy {
   min-width: 0;
+  max-width: 610px;
+}
+
+.home-hero .hero-copy {
+  padding-top: 10px;
+}
+
+.hero-copy h1 {
+  max-width: 11.4em;
 }
 
 .eyebrow {
-  margin: 0 0 9px;
+  margin: 0 0 12px;
   color: #146b5f;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .hero-lede {
-  max-width: 740px;
-  margin: 20px 0 0;
+  max-width: 620px;
+  margin: 22px 0 0;
   color: #40514e;
-  font-size: 1.15rem;
+  font-size: 1.04rem;
+  line-height: 1.65;
 }
 
 .hero-actions,

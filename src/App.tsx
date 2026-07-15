@@ -905,13 +905,12 @@ function HomePage() {
       <section className="home-hero section-frame">
         <div className="hero-copy">
           <p className="eyebrow">Self-hosted production monitoring</p>
-          <h1>Monitor apps, infrastructure, networks, and logs from one self-hosted control plane.</h1>
+          <h1>Self-hosted observability for production systems.</h1>
           <p className="hero-lede">
-            NexusObserve brings your main production signals into one place.
-            Start with OpenTelemetry. Add the agent only where host-local checks
-            or private network visibility matter. From there, alerts, incidents,
-            topology, readiness, and MCP context help the team investigate from
-            the same evidence.
+            NexusObserve brings application traces, infrastructure state, private
+            network checks, and logs into one controlled workspace. Start with
+            OpenTelemetry, then add the agent only where host-local visibility
+            matters.
           </p>
           <div className="hero-actions">
             <SiteLink className="button primary" href="/downloads">
