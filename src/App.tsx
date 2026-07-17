@@ -48,6 +48,41 @@ const routes = [
   { href: "/downloads", label: "Downloads" },
 ];
 
+const defaultDescription =
+  "NexusObserve brings application traces, infrastructure state, private network checks, and logs into one controlled, self-hosted workspace.";
+
+const routeMeta: Record<string, { title: string; description: string }> = {
+  "/": {
+    title: "NexusObserve — Self-hosted observability for production systems",
+    description: defaultDescription,
+  },
+  "/product": {
+    title: "Product — NexusObserve",
+    description:
+      "A single self-hosted control plane for telemetry, local operations, and incident evidence. OpenTelemetry-native, with an agent for local depth.",
+  },
+  "/industries": {
+    title: "Industries — NexusObserve",
+    description:
+      "Where NexusObserve fits: payments and financial services, SaaS, e-commerce, regulated enterprise, platform teams, and AI operations.",
+  },
+  "/compare": {
+    title: "Compare — NexusObserve",
+    description:
+      "How NexusObserve compares to Datadog, New Relic, Dynatrace, SigNoz, CubeAPM, Grafana Alloy, OTel Collector, Observe, and ITRS Geneos.",
+  },
+  "/docs": {
+    title: "Docs — NexusObserve",
+    description:
+      "NexusObserve setup docs: download and install, quick start, production setup, OpenTelemetry, agent local depth, MCP AI investigation, and monitoring sources.",
+  },
+  "/downloads": {
+    title: "Downloads — NexusObserve",
+    description:
+      "Download the self-hosted NexusObserve application and agent packages, with SHA-256 checksums for verification.",
+  },
+};
+
 const productPillars: Array<{
   icon: LucideIcon;
   title: string;
@@ -703,6 +738,31 @@ function usePathname() {
   return path;
 }
 
+function useRouteMeta(path: string) {
+  useEffect(() => {
+    const docMatch = path.match(/^\/docs\/([^/]+)$/);
+    let title: string;
+    let description: string;
+
+    if (docMatch && docMatch[1] in docArticles) {
+      const article = docArticles[docMatch[1] as DocSlug];
+      title = `${article.title} — NexusObserve Docs`;
+      description = article.summary;
+    } else if (path in routeMeta) {
+      title = routeMeta[path].title;
+      description = routeMeta[path].description;
+    } else {
+      title = "Page not found — NexusObserve";
+      description = defaultDescription;
+    }
+
+    document.title = title;
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute("content", description);
+  }, [path]);
+}
+
 function goTo(href: string) {
   window.history.pushState({}, "", href);
   window.dispatchEvent(new Event("site:navigate"));
@@ -736,6 +796,7 @@ function SiteLink({
 
 function App() {
   const path = usePathname();
+  useRouteMeta(path);
   const [copied, setCopied] = useState<string | null>(null);
 
   async function copyToClipboard(value: string, label: string) {

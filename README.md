@@ -15,7 +15,7 @@ npm run dev
 npm run build
 ```
 
-The site is static and can be deployed to Vercel, Netlify, Cloudflare Pages, or GitHub Pages. The Vite `base` is set to `./` so the built files also work when hosted under a repository subpath.
+The site is static and can be deployed to Vercel, Netlify, or Cloudflare Pages. It uses client-side routing with absolute asset paths (`base: "/"`), so the host must serve the site from the domain root and rewrite all unknown paths to `/index.html` — `netlify.toml`, `vercel.json`, and `public/_redirects` already configure this.
 
 ## Downloads
 
