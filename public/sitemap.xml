@@ -4,6 +4,26 @@
   <url><loc>https://nexusobserve.io/product</loc></url>
   <url><loc>https://nexusobserve.io/industries</loc></url>
   <url><loc>https://nexusobserve.io/compare</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/setup</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/sources</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/instrumentation</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/fleet</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/pipelines</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/destinations</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/configuration</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/rollouts</loc></url>
+  <url><loc>https://nexusobserve.io/opentelemetry/health</loc></url>
+  <url><loc>https://nexusobserve.io/guides</loc></url>
+  <url><loc>https://nexusobserve.io/guides/choose-a-deployment-model</loc></url>
+  <url><loc>https://nexusobserve.io/guides/connect-a-data-source</loc></url>
+  <url><loc>https://nexusobserve.io/guides/instrument-an-application</loc></url>
+  <url><loc>https://nexusobserve.io/guides/deploy-a-managed-collector</loc></url>
+  <url><loc>https://nexusobserve.io/guides/kubernetes-collection</loc></url>
+  <url><loc>https://nexusobserve.io/guides/centralized-configuration</loc></url>
+  <url><loc>https://nexusobserve.io/guides/safe-config-rollouts</loc></url>
+  <url><loc>https://nexusobserve.io/guides/build-processing-pipelines</loc></url>
+  <url><loc>https://nexusobserve.io/guides/troubleshoot-telemetry</loc></url>
   <url><loc>https://nexusobserve.io/docs</loc></url>
   <url><loc>https://nexusobserve.io/docs/download-install</loc></url>
   <url><loc>https://nexusobserve.io/docs/quickstart</loc></url>
