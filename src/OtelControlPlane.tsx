@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -171,6 +171,10 @@ export function OtelControlPlanePage({
   onNavigate: (href: string) => void;
 }) {
   const active = getSection(path);
+  const contentRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [path]);
   const [environment, setEnvironment] = useState("Production");
   const [notice, setNotice] = useState<string | null>(null);
   const [showSetup, setShowSetup] = useState(false);
@@ -216,7 +220,7 @@ export function OtelControlPlanePage({
       <div className="otel-main">
         <header className="otel-workspace-header">
           <div>
-            <p className="otel-breadcrumb">OpenTelemetry <span>/</span> {sections.find((item) => item.id === active)?.label}</p>
+            <p className="otel-breadcrumb"><WorkspaceLink href="/product" onNavigate={onNavigate}>Platform</WorkspaceLink> <span>/</span> OpenTelemetry <span>/</span> {sections.find((item) => item.id === active)?.label}</p>
             <h1>{sections.find((item) => item.id === active)?.label}</h1>
           </div>
           <div className="otel-header-actions">
@@ -232,7 +236,7 @@ export function OtelControlPlanePage({
           </div>
         </header>
 
-        <div className="otel-content">
+        <div className="otel-content" ref={contentRef} role="region" aria-label="OpenTelemetry workspace content" tabIndex={0}>
           {active === "overview" ? <Overview onNavigate={onNavigate} /> : null}
           {active === "setup" ? <Setup copied={copied} onCopy={onCopy} onAction={act} /> : null}
           {active === "sources" ? <Sources copied={copied} onCopy={onCopy} onAction={act} /> : null}

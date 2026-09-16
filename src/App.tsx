@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import {
   Activity,
   ArrowRight,
@@ -15,6 +15,7 @@ import {
   Layers3,
   LockKeyhole,
   PackageCheck,
+  Puzzle,
   RadioTower,
   ReceiptText,
   Server,
@@ -23,11 +24,23 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Header, Footer } from "./components/SiteChrome";
+import { Card } from "./components/ui/card";
 import { MarketingHome, MarketingProduct } from "./components/MarketingHome";
 import { MarketingCompare } from "./components/MarketingCompare";
 import { SiteLink, goTo } from "./lib/navigation";
 import { OtelControlPlanePage } from "./OtelControlPlane";
 import { GuideArticlePage, GuidesPage, getGuideMeta } from "./OtelGuides";
+
+const AgentCollectionPage = lazy(() =>
+  import("./AgentControlPlane").then((module) => ({
+    default: module.AgentControlPlanePage,
+  })),
+);
+const PluginCatalogPage = lazy(() =>
+  import("./components/CollectionPages").then((module) => ({
+    default: module.PluginCatalogPage,
+  })),
+);
 
 type DocSlug =
   | "download-install"
@@ -35,11 +48,12 @@ type DocSlug =
   | "production"
   | "opentelemetry"
   | "agent"
+  | "plugins"
   | "mcp"
   | "monitoring-sources";
 
 const defaultDescription =
-  "OpenTelemetry-native observability, local infrastructure depth, and incident intelligence in one connected workspace. Self-hosted. Under your control.";
+  "Self-hosted observability and operations with native agent collection, specialized plugins, OpenTelemetry, and incident investigation in one connected platform.";
 
 const routeMeta: Record<string, { title: string; description: string }> = {
   "/": {
@@ -49,7 +63,17 @@ const routeMeta: Record<string, { title: string; description: string }> = {
   "/product": {
     title: "Product — NexusObserve",
     description:
-      "A single self-hosted control plane for telemetry, local operations, and incident evidence. OpenTelemetry-native, with an agent for local depth.",
+      "One self-hosted observability and operations platform for native agent collection, specialized plugins, OpenTelemetry, and incident investigation.",
+  },
+  "/agents": {
+    title: "Agent-based collection — NexusObserve",
+    description:
+      "Fetch host, process, file, database, and private endpoint signals directly with the NexusObserve agent. Native collection for your production estate.",
+  },
+  "/plugins": {
+    title: "Native plugin catalog — NexusObserve",
+    description:
+      "Browse native NexusObserve plugins for infrastructure, processes, services, files, databases, and private endpoints. Search samplers and explore collection controls.",
   },
   "/industries": {
     title: "Industries — NexusObserve",
@@ -59,12 +83,12 @@ const routeMeta: Record<string, { title: string; description: string }> = {
   "/compare": {
     title: "Compare — NexusObserve",
     description:
-      "Compare documented OpenTelemetry ingestion, deployment, and operational approaches across NexusObserve, Datadog, Dynatrace, SigNoz, and CubeAPM.",
+      "Compare deployment, collection, investigation, and operational ownership across NexusObserve and other observability platforms.",
   },
   "/docs": {
     title: "Docs — NexusObserve",
     description:
-      "NexusObserve setup docs: download and install, quick start, production setup, OpenTelemetry, agent local depth, MCP AI investigation, and monitoring sources.",
+      "NexusObserve setup docs: deployment, native agent collection, plugin configuration, OpenTelemetry, hybrid monitoring, and MCP AI investigation.",
   },
   "/downloads": {
     title: "Downloads — NexusObserve",
@@ -171,7 +195,7 @@ const downloadArtifacts = [
   {
     icon: HardDriveDownload,
     title: "NexusObserve agent",
-    subtitle: "Local-depth host and operations runtime",
+    subtitle: "Direct infrastructure and operations collection",
     file: "/downloads/nexusobserve-agent-linux-amd64.tar.gz",
     platform: "Linux amd64",
     size: "Agent archive",
@@ -220,7 +244,7 @@ const docArticles: Record<
       },
       {
         heading: "Download the agent package",
-        body: "Use the agent only where local host state, private checks, SQL samplers, file monitoring, or other local-depth operations are needed.",
+        body: "Use the agent as a primary collection runtime for host state, private checks, SQL samplers, file monitoring, and operational signals.",
         code:
           'SITE_URL="__SITE_ORIGIN__"\n' +
           'curl -LO "$SITE_URL/downloads/nexusobserve-agent-linux-amd64.tar.gz"\n' +
@@ -236,7 +260,7 @@ const docArticles: Record<
       },
       {
         heading: "Choose the next guide",
-        body: "For a quick demo, use Local quickstart. For a Linux service install, use Production server setup. For standard app telemetry, use OpenTelemetry setup. For local host or private checks, use Agent local-depth setup.",
+        body: "Start with Local quickstart or Production server setup. Then choose Agent-based collection setup and Native plugin setup for direct collection, or OpenTelemetry setup for SDKs and Collectors. A hybrid estate can use both.",
       },
     ],
   },
@@ -245,12 +269,12 @@ const docArticles: Record<
     eyebrow: "Your first workspace",
     icon: Terminal,
     summary:
-      "Start NexusObserve, Postgres, and ClickHouse with the Docker quick start, then connect your first application.",
+      "Start NexusObserve, Postgres, and ClickHouse with the Docker quick start, then connect your first infrastructure or application signal.",
     sections: [
       {
         heading: "Start the stack",
         body: "On a machine with Docker installed, run the quick start. It starts the application and both backing databases with persistent volumes.",
-        code: "curl -fsSL https://raw.githubusercontent.com/nexusobserve/nexusobserve/main/scripts/quickstart.sh | sh",
+        code: "curl -fsSL __SITE_ORIGIN__/downloads/quickstart.sh | sh",
         checks: [
           "Open http://localhost:8080 after the containers start.",
           "Create the first admin user in the web console.",
@@ -259,11 +283,11 @@ const docArticles: Record<
       },
       {
         heading: "Connect your first signal",
-        body: "Send OpenTelemetry traces, metrics, and logs to your NexusObserve endpoint. Use the OpenTelemetry setup guide for SDK configuration, Collector pipelines, authentication, and receiver checks.",
+        body: "For direct infrastructure collection, enroll a NexusObserve agent and enable native plugins for your host, files, databases, or private checks. For application telemetry, connect an OpenTelemetry SDK or Collector. Both paths feed the same product.",
         checks: [
-          "Set a stable service.name and deployment.environment.name.",
-          "Confirm the service appears in the console.",
-          "Check traces, log records, and metric timestamps before creating alerts.",
+          "Choose native agent collection, OpenTelemetry, or both for your environment.",
+          "Confirm your host or service and its incoming signals appear in the console.",
+          "Check collected samples, log records, or traces before creating alerts.",
         ],
       },
       {
@@ -351,7 +375,7 @@ const docArticles: Record<
     ],
   },
   agent: {
-    title: "Agent local-depth setup",
+    title: "Agent-based collection setup",
     eyebrow: "Operations runtime",
     icon: Server,
     summary:
@@ -359,7 +383,7 @@ const docArticles: Record<
     sections: [
       {
         heading: "When to choose the agent",
-        body: "Do not install the agent just to send standard application traces. Use it when proximity to the host or private network gives better signal than generic telemetry forwarding.",
+        body: "Choose the agent as a primary collection runtime for infrastructure, private systems, and operational checks. Native plugins fetch signals directly and feed the same dashboards, dataviews, rules, and investigations as OpenTelemetry.",
         checks: [
           "Host CPU, disk, network, hardware, process, and systemd state.",
           "Private SQL/database checks and internal network checks.",
@@ -380,6 +404,38 @@ const docArticles: Record<
       {
         heading: "Enterprise policy posture",
         body: "The security model treats the agent as a governed operations runtime. Regulated deployments use plugin allowlists, read-path allowlists, egress allowlists, signed config, secret providers, and audit export.",
+      },
+    ],
+  },
+  plugins: {
+    title: "Native plugin setup",
+    eyebrow: "Collection catalog",
+    icon: Puzzle,
+    summary:
+      "Choose native samplers, configure their targets and collection controls, then connect operational signals to dataviews, dashboards, and alert rules.",
+    sections: [
+      {
+        heading: "Choose the plugin for your system",
+        body: "Browse the native plugin catalog for host counters, process and service state, files and logs, SQL samplers, endpoint checks, and custom operations. These plugins are separate from OpenTelemetry SDK and receiver templates.",
+        checks: [
+          "CPU, disk, network, hardware, containers, and Kubernetes.",
+          "Process and systemd service monitoring.",
+          "File keyword monitoring, file transmission monitoring, and log tailing.",
+          "Read-only SQL query sampling and private network or HTTP checks.",
+        ],
+      },
+      {
+        heading: "Configure the collection target",
+        body: "In your NexusObserve console, select the plugin for the probe or sampler, then configure its interval, target, and supported source settings. For SQL, use scoped read-only credentials. For file monitors, choose explicit read paths.",
+        checks: [
+          "Set collection intervals and bounded timeouts.",
+          "Choose approved database, file, interface, or endpoint targets.",
+          "Apply plugin, path, network, and executable allowlists for the host class.",
+        ],
+      },
+      {
+        heading: "Turn samples into an operating view",
+        body: "Verify incoming measurements and row identities in the dataview. Build dashboards and rules around the signal, then connect alerts to services, owners, and incident investigation. Use hybrid collection when application telemetry also arrives through OpenTelemetry.",
       },
     ],
   },
@@ -431,11 +487,11 @@ const docArticles: Record<
     eyebrow: "Setup model",
     icon: Layers3,
     summary:
-      "Start from what you want to monitor, then choose the safest collection path: agentless OTLP, customer-managed Collector, NexusObserve agent, or hybrid.",
+      "Start from the systems you operate, then choose native agent collection, OpenTelemetry SDKs and Collectors, or hybrid monitoring. Each path is part of the same NexusObserve product.",
     sections: [
       {
         heading: "Ask three setup questions",
-        body: "The setup model is source-first, not agent-first. The goal is useful dashboards, alerts, readiness, traces, logs, and metrics.",
+        body: "Choose the collection model around the signals and access your environment needs. Native plugins and open telemetry both feed useful dashboards, dataviews, alerts, and investigations.",
         checks: [
           "What do you want to monitor?",
           "What access do you have?",
@@ -444,7 +500,7 @@ const docArticles: Record<
       },
       {
         heading: "Recommended paths",
-        body: "Application APM usually starts with OTel SDKs or a Collector. Hosts, Docker, Kubernetes, databases, logs, websites, and migrations each have separate recommended paths.",
+        body: "Native agents collect directly from hosts, containers, services, files, databases, and private endpoints. OpenTelemetry SDKs and Collectors connect application traces, logs, and metrics. A hybrid estate combines both.",
         checks: [
           "Application: OpenTelemetry SDK or Collector.",
           "Linux host or VM: NexusObserve agent for guided local depth, or OTel hostmetrics for read-only.",
@@ -500,9 +556,17 @@ function useRouteMeta(path: string) {
       const article = docArticles[docMatch[1] as DocSlug];
       title = `${article.title} — NexusObserve Docs`;
       description = article.summary;
-    } else if (path in routeMeta || path.startsWith("/opentelemetry/")) {
+    } else if (
+      path in routeMeta ||
+      path.startsWith("/opentelemetry/") ||
+      path.startsWith("/agents/")
+    ) {
       const meta =
-        path in routeMeta ? routeMeta[path] : routeMeta["/opentelemetry"];
+        path in routeMeta
+          ? routeMeta[path]
+          : routeMeta[
+              path.startsWith("/agents/") ? "/agents" : "/opentelemetry"
+            ];
       title = meta.title;
       description = meta.description;
     } else {
@@ -536,6 +600,9 @@ function useRouteMeta(path: string) {
 
 function App() {
   const path = usePathname();
+  const isWorkspace = ["/opentelemetry", "/agents"].some(
+    (prefix) => path === prefix || path.startsWith(prefix + "/"),
+  );
   useRouteMeta(path);
   const [copied, setCopied] = useState<string | null>(null);
 
@@ -575,6 +642,16 @@ function App() {
         return <MarketingHome />;
       case "/product":
         return <MarketingProduct />;
+      case "/agents":
+        return (
+          <AgentCollectionPage
+            path={path}
+            copied={copied}
+            onCopy={copyToClipboard}
+          />
+        );
+      case "/plugins":
+        return <PluginCatalogPage />;
       case "/industries":
         return <IndustriesPage />;
       case "/compare":
@@ -586,6 +663,15 @@ function App() {
       case "/downloads":
         return <DownloadsPage copied={copied} onCopy={copyToClipboard} />;
       default:
+        if (path.startsWith("/agents/")) {
+          return (
+            <AgentCollectionPage
+              path={path}
+              copied={copied}
+              onCopy={copyToClipboard}
+            />
+          );
+        }
         if (path === "/opentelemetry" || path.startsWith("/opentelemetry/")) {
           return (
             <OtelControlPlanePage
@@ -601,15 +687,23 @@ function App() {
   }, [path, copied]);
 
   return (
-    <div className="site-shell">
+    <div className={isWorkspace ? "site-shell workspace-shell" : "site-shell"}>
       <Header path={path} />
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
       <main id="main-content" tabIndex={-1}>
-        {page}
+        <Suspense
+          fallback={
+            <div className="collection-loading section-frame" role="status">
+              Loading…
+            </div>
+          }
+        >
+          {page}
+        </Suspense>
       </main>
-      <Footer />
+      {!isWorkspace && <Footer />}
     </div>
   );
 }
@@ -670,15 +764,17 @@ function DocsPage() {
           {docList.map(([slug, article]) => {
             const Icon = article.icon;
             return (
-              <SiteLink href={`/docs/${slug}`} className="doc-card" key={slug}>
-                <Icon size={24} />
-                <p className="eyebrow">{article.eyebrow}</p>
-                <h3>{article.title}</h3>
-                <p>{article.summary}</p>
-                <span>
-                  Open guide <ArrowRight size={16} />
-                </span>
-              </SiteLink>
+              <Card asChild key={slug}>
+                <SiteLink href={`/docs/${slug}`} className="doc-card">
+                  <Icon size={24} />
+                  <p className="eyebrow">{article.eyebrow}</p>
+                  <h3>{article.title}</h3>
+                  <p>{article.summary}</p>
+                  <span>
+                    Open guide <ArrowRight size={16} />
+                  </span>
+                </SiteLink>
+              </Card>
             );
           })}
         </div>
@@ -796,25 +892,27 @@ function DownloadsPage({
           {downloadArtifacts.map((item) => {
             const Icon = item.icon;
             return (
-              <article className="download-card" key={item.title}>
-                <div className="download-head">
-                  <span className="download-icon">
-                    <Icon size={25} />
-                  </span>
-                  <span>{item.platform}</span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.subtitle}</p>
-                <div className="package-meta">
-                  <span>{item.size}</span>
-                  <span>SHA-256 listed in checksums file</span>
-                </div>
-                <p>{item.install}</p>
-                <a className="button primary full" href={item.file} download>
-                  <Download size={18} />
-                  Download package
-                </a>
-              </article>
+              <Card asChild key={item.title}>
+                <article className="download-card">
+                  <div className="download-head">
+                    <span className="download-icon">
+                      <Icon size={25} />
+                    </span>
+                    <span>{item.platform}</span>
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.subtitle}</p>
+                  <div className="package-meta">
+                    <span>{item.size}</span>
+                    <span>SHA-256 listed in checksums file</span>
+                  </div>
+                  <p>{item.install}</p>
+                  <a className="button primary full" href={item.file} download>
+                    <Download size={18} />
+                    Download package
+                  </a>
+                </article>
+              </Card>
             );
           })}
         </div>
@@ -893,21 +991,23 @@ function IndustryCard({
 }) {
   const Icon = item.icon;
   return (
-    <article className="industry-card">
-      <Icon size={24} />
-      <h3>{item.title}</h3>
-      <p>{item.bestFor}</p>
-      {!compact ? (
-        <ul>
-          {item.outcomes.map((outcome) => (
-            <li key={outcome}>
-              <CheckCircle2 size={15} />
-              <span>{outcome}</span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </article>
+    <Card asChild>
+      <article className="industry-card">
+        <Icon size={24} />
+        <h3>{item.title}</h3>
+        <p>{item.bestFor}</p>
+        {!compact ? (
+          <ul>
+            {item.outcomes.map((outcome) => (
+              <li key={outcome}>
+                <CheckCircle2 size={15} />
+                <span>{outcome}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </article>
+    </Card>
   );
 }
 

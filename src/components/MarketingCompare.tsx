@@ -20,7 +20,8 @@ const platforms = [
     type: "Customer-owned control plane",
     deployment: "Self-hosted",
     otel: "Native OTLP over HTTP and gRPC",
-    context: "Telemetry + native local operations + incident evidence",
+    context:
+      "Native agents + specialized plugins + OpenTelemetry + incident evidence",
     consideration:
       "Operate and size your own application, Postgres, and ClickHouse.",
     href: "/docs",
@@ -83,9 +84,9 @@ export function MarketingCompare() {
           <span className="gradient-text">Different approaches.</span>
         </h1>
         <p>
-          OTLP is the starting point. Deployment, local visibility,
-          investigation workflows, and operational ownership shape the platform
-          you need.
+          Compare how you collect, investigate, and operate. Native agents,
+          plugin coverage, open telemetry, deployment, and operational ownership
+          all shape the platform you need.
         </p>
         <div className="hero-actions">
           <Button asChild size="lg" className="main-cta">
@@ -214,7 +215,7 @@ export function MarketingCompare() {
             </Card>
           ))}
         </div>
-        <div className="collector-context">
+        <Card className="collector-context">
           <RadioTower size={25} />
           <div>
             <h3>A Collector is part of the pipeline.</h3>
@@ -234,7 +235,7 @@ export function MarketingCompare() {
             About Alloy
             <ArrowUpRight size={14} />
           </a>
-        </div>
+        </Card>
         <p className="comparison-bottom-note">
           <CheckCircle2 size={14} />
           Storage control gives you choices. Total cost still depends on ingest,

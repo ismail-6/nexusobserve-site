@@ -199,7 +199,6 @@ export const otelSourceCatalog: SourceDefinition[] = [
   s("website", "Browser website test", "Network & synthetics", "Run browser journeys, assertions, screenshots and frontend performance checks.", "nexus-browsercheck", ["Checks", "RUM", "Events"], "Synthetic probe", ["Agent"], "Stable", "Guided template", endpointFields),
 
   // Developer systems and deployment events
-  s("github", "GitHub", "Developer systems", "Repository, workflow, deployment and pull-request events plus runner metrics.", "github", ["Metrics", "Events", "Inventory"], "Cloud API", ["Cloud", "Gateway"], "Beta", "Starter config", endpointFields),
   s("gitlab", "GitLab", "Developer systems", "Pipeline, job, runner and deployment telemetry through Prometheus and webhooks.", "prometheus + webhookevent", ["Metrics", "Events", "Logs"], "Prometheus scrape", ["Agent", "Gateway"], "Stable", "Guided template", scrapeFields),
   s("jenkins", "Jenkins", "Developer systems", "Controller, executor, queue, build and deployment telemetry.", "prometheus + webhookevent", ["Metrics", "Events", "Logs"], "Prometheus scrape", ["Agent", "Gateway"], "Stable", "Guided template", scrapeFields),
   s("argocd", "Argo CD", "Developer systems", "Application sync, health, reconciliation and deployment events.", "prometheus + webhookevent", ["Metrics", "Events", "Inventory"], "Prometheus scrape", ["Cluster", "Gateway"], "Stable", "Guided template", scrapeFields),

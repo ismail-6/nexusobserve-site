@@ -1,13 +1,22 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="OpenTelemetry-native observability, local infrastructure depth, and incident intelligence in one connected workspace. Self-hosted. Under your control."
+      content="Self-hosted observability and operations with native agent collection, specialized plugins, OpenTelemetry, and incident investigation in one connected platform."
     />
-    <meta name="theme-color" content="#09070f" />
+    <meta name="theme-color" content="#ffffff" />
+    <script>
+      try {
+        if (localStorage.getItem("nexusobserve-theme") === "dark") {
+          document.documentElement.classList.add("dark");
+          document.querySelector('meta[name="theme-color"]').content =
+            "#171717";
+        }
+      } catch {}
+    </script>
     <link rel="canonical" href="https://nexusobserve.io/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:type" content="website" />
@@ -19,7 +28,7 @@
     />
     <meta
       property="og:description"
-      content="OpenTelemetry-native observability, local infrastructure depth, and incident intelligence in one connected workspace. Self-hosted. Under your control."
+      content="Self-hosted observability and operations with native agent collection, specialized plugins, OpenTelemetry, and incident investigation in one connected platform."
     />
     <meta name="twitter:card" content="summary" />
     <meta
@@ -28,7 +37,7 @@
     />
     <meta
       name="twitter:description"
-      content="OpenTelemetry-native observability, local infrastructure depth, and incident intelligence in one connected workspace. Self-hosted. Under your control."
+      content="Self-hosted observability and operations with native agent collection, specialized plugins, OpenTelemetry, and incident investigation in one connected platform."
     />
     <title>NexusObserve — Observe everything. Own the whole picture.</title>
   </head>

@@ -1,18 +1,24 @@
 import * as React from "react";
+import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<"div"> & { asChild?: boolean }
+>(function Card({ className, asChild = false, ...props }, ref) {
+  const Comp = asChild ? Slot.Root : "div";
   return (
-    <div
+    <Comp
+      ref={ref}
       data-slot="card"
       className={cn(
-        "flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground shadow-sm",
+        "surface-card flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground dark:border-0",
         className,
       )}
       {...props}
     />
   );
-}
+});
 
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (

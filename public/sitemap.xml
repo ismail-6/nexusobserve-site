@@ -2,6 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://nexusobserve.io/</loc></url>
   <url><loc>https://nexusobserve.io/product</loc></url>
+  <url><loc>https://nexusobserve.io/agents</loc></url>
+  <url><loc>https://nexusobserve.io/agents/overview</loc></url>
+  <url><loc>https://nexusobserve.io/agents/setup</loc></url>
+  <url><loc>https://nexusobserve.io/agents/plugins</loc></url>
+  <url><loc>https://nexusobserve.io/agents/samplers</loc></url>
+  <url><loc>https://nexusobserve.io/agents/fleet</loc></url>
+  <url><loc>https://nexusobserve.io/agents/dataviews</loc></url>
+  <url><loc>https://nexusobserve.io/agents/configuration</loc></url>
+  <url><loc>https://nexusobserve.io/agents/security</loc></url>
+  <url><loc>https://nexusobserve.io/agents/rollouts</loc></url>
+  <url><loc>https://nexusobserve.io/agents/health</loc></url>
+  <url><loc>https://nexusobserve.io/plugins</loc></url>
   <url><loc>https://nexusobserve.io/industries</loc></url>
   <url><loc>https://nexusobserve.io/compare</loc></url>
   <url><loc>https://nexusobserve.io/opentelemetry</loc></url>
@@ -30,6 +42,7 @@
   <url><loc>https://nexusobserve.io/docs/production</loc></url>
   <url><loc>https://nexusobserve.io/docs/opentelemetry</loc></url>
   <url><loc>https://nexusobserve.io/docs/agent</loc></url>
+  <url><loc>https://nexusobserve.io/docs/plugins</loc></url>
   <url><loc>https://nexusobserve.io/docs/mcp</loc></url>
   <url><loc>https://nexusobserve.io/docs/monitoring-sources</loc></url>
   <url><loc>https://nexusobserve.io/downloads</loc></url>

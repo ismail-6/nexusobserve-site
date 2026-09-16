@@ -8,10 +8,8 @@ import {
   Braces,
   Check,
   CheckCircle2,
-  ChevronRight,
   Clipboard,
   Cloud,
-  Code2,
   Cpu,
   Database,
   FileText,
@@ -34,9 +32,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { NumberedFaq } from "./shadcn-space/NumberedFaq";
 import { ProductPreview, ServiceMap } from "./ProductPreview";
 import { SiteLink } from "@/lib/navigation";
-import { otelSourceCatalog } from "@/otelSourceCatalog";
+import {
+  CollectionCapabilitiesSection,
+  SourceCoverageSection,
+} from "./CollectionPaths";
 
 const collectionModels = [
+  {
+    id: "agent",
+    name: "Native agent",
+    icon: Cpu,
+    tag: "GO CLOSER TO THE SYSTEM",
+    title: "Collect directly from your infrastructure.",
+    body: "Fetch host, process, filesystem, database, and private network signals with the NexusObserve agent. Make it your primary collection runtime and run native plugins close to the systems you operate.",
+    points: [
+      "Host, process, disk, SQL, and systemd checks",
+      "Private endpoints and local file monitoring",
+      "mTLS enrollment and signed configuration",
+    ],
+    source: "Hosts & private networks",
+    code: "# Local visibility, inside your boundary\nhost: production-vm-01\ncollection:\n  - cpu & memory\n  - processes & systemd\n  - filesystem & SQL\n  - private network checks",
+    href: "/agents",
+    link: "Explore agent-based collection",
+  },
   {
     id: "opentelemetry",
     name: "OpenTelemetry",
@@ -51,25 +69,8 @@ const collectionModels = [
     ],
     source: "SDKs & Collectors",
     code: "OTEL_SERVICE_NAME=checkout-api\nOTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf\nOTEL_EXPORTER_OTLP_ENDPOINT=https://observe.example.com/api/otlp\nOTEL_RESOURCE_ATTRIBUTES=deployment.environment.name=production",
-    href: "/docs/opentelemetry",
+    href: "/opentelemetry",
     link: "Connect OpenTelemetry",
-  },
-  {
-    id: "agent",
-    name: "Native agent",
-    icon: Cpu,
-    tag: "GO CLOSER TO THE SYSTEM",
-    title: "See what application telemetry can’t tell you.",
-    body: "Bring host, process, filesystem, and private network state into the investigation. Run native plugins near the systems that need them, with controlled enrollment and configuration.",
-    points: [
-      "Host, process, disk, SQL, and systemd checks",
-      "Private endpoints and local file monitoring",
-      "mTLS enrollment and signed configuration",
-    ],
-    source: "Hosts & private networks",
-    code: "# Local visibility, inside your boundary\nhost: production-vm-01\ncollection:\n  - cpu & memory\n  - processes & systemd\n  - filesystem & SQL\n  - private network checks",
-    href: "/docs/agent",
-    link: "Meet the native agent",
   },
   {
     id: "hybrid",
@@ -101,11 +102,11 @@ export function CollectionSection() {
           <span className="muted-heading">We’ll connect the dots.</span>
         </h2>
         <p>
-          One platform. Three collection paths. Choose what fits your
-          environment.
+          Agent-based, OpenTelemetry, or hybrid. Choose the collection model
+          that fits your environment.
         </p>
       </div>
-      <Tabs defaultValue="opentelemetry" className="collection-tabs">
+      <Tabs defaultValue="agent" className="collection-tabs">
         <TabsList
           className="collection-tabs-list"
           aria-label="Collection paths"
@@ -123,54 +124,56 @@ export function CollectionSection() {
             value={model.id}
             className="collection-tab-content"
           >
-            <div className="collection-copy">
-              <p className="eyebrow">{model.tag}</p>
-              <h3>{model.title}</h3>
-              <p>{model.body}</p>
-              <ul>
-                {model.points.map((point) => (
-                  <li key={point}>
-                    <CheckCircle2 size={16} />
-                    {point}
-                  </li>
-                ))}
-              </ul>
-              <SiteLink href={model.href} className="text-link">
-                {model.link}
-                <ArrowRight size={16} />
-              </SiteLink>
-            </div>
-            <div className="collection-diagram">
-              <div className="collection-code-header">
-                <span className="tiny-dot" />
-                <span>{model.source}</span>
-                <span>nexusobserve</span>
+            <Card className="collection-panel">
+              <div className="collection-copy">
+                <p className="eyebrow">{model.tag}</p>
+                <h3>{model.title}</h3>
+                <p>{model.body}</p>
+                <ul>
+                  {model.points.map((point) => (
+                    <li key={point}>
+                      <CheckCircle2 size={16} />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+                <SiteLink href={model.href} className="text-link">
+                  {model.link}
+                  <ArrowRight size={16} />
+                </SiteLink>
               </div>
-              <pre>
-                <code>{model.code}</code>
-              </pre>
-              <div className="pipeline-visual">
-                <span>
-                  <model.icon size={21} />
-                </span>
-                <i />
-                <span>
-                  <Workflow size={21} />
-                </span>
-                <i />
-                <span className="pipeline-destination">
-                  <Database size={21} />
-                </span>
+              <div className="collection-diagram">
+                <div className="collection-code-header">
+                  <span className="tiny-dot" />
+                  <span>{model.source}</span>
+                  <span>nexusobserve</span>
+                </div>
+                <pre>
+                  <code>{model.code}</code>
+                </pre>
+                <div className="pipeline-visual">
+                  <span>
+                    <model.icon size={21} />
+                  </span>
+                  <i />
+                  <span>
+                    <Workflow size={21} />
+                  </span>
+                  <i />
+                  <span className="pipeline-destination">
+                    <Database size={21} />
+                  </span>
+                </div>
+                <div className="pipeline-labels">
+                  <span>Collect</span>
+                  <span>Process</span>
+                  <span>Investigate</span>
+                </div>
+                <div className="collection-diagram-footer">
+                  <ShieldCheck size={13} /> Within your infrastructure boundary
+                </div>
               </div>
-              <div className="pipeline-labels">
-                <span>Collect</span>
-                <span>Process</span>
-                <span>Investigate</span>
-              </div>
-              <div className="collection-diagram-footer">
-                <ShieldCheck size={13} /> Within your infrastructure boundary
-              </div>
-            </div>
+            </Card>
           </TabsContent>
         ))}
       </Tabs>
@@ -355,8 +358,7 @@ function ActivityIcon() {
 export function InstallSection() {
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
-  const installCommand =
-    "curl -fsSL https://raw.githubusercontent.com/nexusobserve/nexusobserve/main/scripts/quickstart.sh | sh";
+  const installCommand = `curl -fsSL ${window.location.origin}/downloads/quickstart.sh | sh`;
   async function copyInstall() {
     try {
       await navigator.clipboard.writeText(installCommand);
@@ -453,33 +455,38 @@ export function InstallSection() {
 
 export function ClosingCta() {
   return (
-    <section className="closing-cta section-frame">
-      <div className="cta-orbit" aria-hidden="true" />
-      <Badge variant="outline">
-        <span className="tiny-dot" />
-        BUILT FOR YOUR ENVIRONMENT
-      </Badge>
-      <h2>
-        Your systems.
-        <br />
-        <span>Your complete picture.</span>
-      </h2>
-      <p>Open telemetry. Deep operational context. All under your control.</p>
-      <div className="hero-actions">
-        <Button asChild size="lg" className="main-cta">
-          <SiteLink href="/downloads">
-            Get started with NexusObserve
-            <ArrowRight size={16} />
-          </SiteLink>
-        </Button>
-        <Button asChild size="lg" variant="outline" className="outline-cta">
-          <SiteLink href="/docs">
-            Explore the docs
-            <ArrowUpRight size={15} />
-          </SiteLink>
-        </Button>
-      </div>
-    </section>
+    <Card asChild>
+      <section className="closing-cta section-frame">
+        <div className="cta-orbit" aria-hidden="true" />
+        <Badge variant="outline">
+          <span className="tiny-dot" />
+          BUILT FOR YOUR ENVIRONMENT
+        </Badge>
+        <h2>
+          Your systems.
+          <br />
+          <span>Your complete picture.</span>
+        </h2>
+        <p>
+          Native agents. Specialized plugins. OpenTelemetry. One connected
+          product.
+        </p>
+        <div className="hero-actions">
+          <Button asChild size="lg" className="main-cta">
+            <SiteLink href="/downloads">
+              Get started with NexusObserve
+              <ArrowRight size={16} />
+            </SiteLink>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="outline-cta">
+            <SiteLink href="/docs">
+              Explore the docs
+              <ArrowUpRight size={15} />
+            </SiteLink>
+          </Button>
+        </div>
+      </section>
+    </Card>
   );
 }
 
@@ -494,9 +501,9 @@ export function MarketingHome() {
         </div>
         <div className="hero-noise" aria-hidden="true" />
         <div className="premium-hero-copy section-frame">
-          <SiteLink href="/opentelemetry" className="announcement">
+          <SiteLink href="/product" className="announcement">
             <Badge>OPEN BY DESIGN</Badge>
-            <span>Meet your OpenTelemetry workspace</span>
+            <span>Meet your observability & operations platform</span>
             <ArrowRight size={13} />
           </SiteLink>
           <h1>
@@ -505,9 +512,10 @@ export function MarketingHome() {
             <span>Own the whole picture.</span>
           </h1>
           <p className="premium-hero-lede">
-            Traces, logs, infrastructure, and incident intelligence.
-            <br className="desktop-break" /> One connected workspace. On
-            infrastructure you control.
+            Collect with native agents, extend with plugins, or connect
+            OpenTelemetry.
+            <br className="desktop-break" /> Investigate applications and
+            infrastructure in one self-hosted platform.
           </p>
           <div className="hero-actions">
             <Button asChild size="lg" className="main-cta">
@@ -529,11 +537,11 @@ export function MarketingHome() {
             </span>
             <span>
               <Check size={12} />
-              OpenTelemetry native
+              Native agents & plugins
             </span>
             <span>
               <Check size={12} />
-              AI-ready through MCP
+              OpenTelemetry & AI investigation
             </span>
           </div>
         </div>
@@ -570,62 +578,10 @@ export function MarketingHome() {
           </span>
         </div>
       </section>
+      <CollectionCapabilitiesSection />
       <FeatureSection />
       <CollectionSection />
-      <section className="sources-section section-frame marketing-section">
-        <div className="source-grid-decoration" aria-hidden="true" />
-        <div className="section-heading centered">
-          <p className="eyebrow">A BIGGER VIEW OF YOUR ENVIRONMENT</p>
-          <h2>
-            Your stack is complex.
-            <br />
-            <span className="muted-heading">Connecting it shouldn’t be.</span>
-          </h2>
-          <p>
-            Explore {otelSourceCatalog.length}+ source templates for
-            applications, infrastructure,
-            <br className="desktop-break" /> databases, cloud services, and the
-            tools you already run.
-          </p>
-        </div>
-        <div className="source-chip-grid">
-          {[
-            { name: "Node.js", icon: Braces },
-            { name: "Python", icon: Code2 },
-            { name: "Go", icon: Terminal },
-            { name: "Java", icon: Code2 },
-            { name: "PostgreSQL", icon: Database },
-            { name: "Redis", icon: Layers3 },
-            { name: "Kafka", icon: GitBranch },
-            { name: "Kubernetes", icon: Box },
-            { name: "AWS", icon: Cloud },
-            { name: "Azure", icon: Cloud },
-            { name: "Linux", icon: Server },
-            { name: "Prometheus", icon: AudioLines },
-          ].map(({ name, icon: Icon }) => (
-            <SiteLink
-              href={`/opentelemetry/sources?source=${encodeURIComponent(name)}`}
-              className="source-chip"
-              key={name}
-            >
-              <Icon size={19} />
-              {name}
-              <ChevronRight size={13} />
-            </SiteLink>
-          ))}
-        </div>
-        <SiteLink
-          href="/opentelemetry/sources"
-          className="text-link sources-link"
-        >
-          Explore all data sources
-          <ArrowRight size={16} />
-        </SiteLink>
-        <p className="sources-note">
-          Guided templates with source-specific configuration and collection
-          paths.
-        </p>
-      </section>
+      <SourceCoverageSection />
       <InstallSection />
       <section className="faq-section section-frame marketing-section">
         <div className="section-heading">
@@ -649,7 +605,12 @@ export function MarketingHome() {
             {
               question: "Do I need to install a NexusObserve agent?",
               answer:
-                "You can start by sending OTLP directly from your OpenTelemetry SDKs or an existing Collector. Add the native agent when you need local process, filesystem, systemd, SQL, or private network visibility. Hybrid environments can use both paths.",
+                "Choose the collection path that fits your systems. The native agent is a primary runtime for hosts, processes, files, SQL samplers, and private checks. You can also send OTLP from SDKs or an existing Collector. Hybrid environments combine both paths in the same product.",
+            },
+            {
+              question: "What can I collect with native plugins?",
+              answer:
+                "The native plugin catalog covers host counters, process and service health, file keywords and arrivals, log tailing, SQL results, and private endpoint checks. Choose the samplers and collection settings your environment needs, then use their signals across dataviews, dashboards, alerts, and investigations.",
             },
             {
               question: "Where does my telemetry live?",
@@ -693,8 +654,9 @@ export function MarketingProduct() {
           <span className="gradient-text">Shared context.</span>
         </h1>
         <p>
-          Bring application observability, local infrastructure depth, and
-          incident workflows into one self-hosted control plane.
+          Bring native agent collection, specialized plugins, OpenTelemetry, and
+          incident workflows into one self-hosted observability and operations
+          platform.
         </p>
         <div className="hero-actions">
           <Button asChild size="lg" className="main-cta">
@@ -714,6 +676,7 @@ export function MarketingProduct() {
       <div className="section-frame">
         <ProductPreview />
       </div>
+      <CollectionCapabilitiesSection />
       <FeatureSection />
       <CollectionSection />
       <section className="platform-architecture section-frame marketing-section">
@@ -729,8 +692,8 @@ export function MarketingProduct() {
           {[
             {
               icon: RadioTower,
-              title: "Collect openly",
-              body: "Direct OTLP, upstream Collectors, browser telemetry, cloud exports, and native agents. Choose the right entry point for each signal.",
+              title: "Collect your way",
+              body: "Native agents and plugins fetch operational signals directly. OpenTelemetry connects SDKs and Collectors. Choose either path or combine them across your estate.",
             },
             {
               icon: Workflow,
@@ -743,11 +706,13 @@ export function MarketingProduct() {
               body: "ClickHouse stores high-volume telemetry. Postgres stores control-plane state. You decide retention, backups, and infrastructure sizing.",
             },
           ].map((item) => (
-            <article key={item.title}>
-              <item.icon size={24} />
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </article>
+            <Card asChild key={item.title}>
+              <article>
+                <item.icon size={24} />
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </article>
+            </Card>
           ))}
         </div>
       </section>

@@ -4,10 +4,13 @@ import {
   BookOpen,
   ChevronDown,
   Code2,
+  Cpu,
   Download,
-  Github,
   Menu,
+  Moon,
+  Puzzle,
   RadioTower,
+  Sun,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -54,9 +57,28 @@ export function Brand({ compact = false }: { compact?: boolean }) {
 
 const primaryLinks = [
   { href: "/product", label: "Platform" },
-  { href: "/opentelemetry", label: "OpenTelemetry" },
   { href: "/industries", label: "Solutions" },
   { href: "/compare", label: "Compare" },
+];
+const platformLinks = [
+  {
+    href: "/agents",
+    label: "Agent-based collection",
+    icon: Cpu,
+    detail: "Fetch signals directly from your systems",
+  },
+  {
+    href: "/plugins",
+    label: "Plugin catalog",
+    icon: Puzzle,
+    detail: "Native samplers for your production estate",
+  },
+  {
+    href: "/opentelemetry",
+    label: "OpenTelemetry",
+    icon: RadioTower,
+    detail: "Connect and manage open telemetry pipelines",
+  },
 ];
 const resourceLinks = [
   {
@@ -81,6 +103,20 @@ const resourceLinks = [
 
 export function Header({ path }: { path: string }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() =>
+    document.documentElement.classList.contains("dark"),
+  );
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", darkMode ? "#171717" : "#ffffff");
+    try {
+      localStorage.setItem("nexusobserve-theme", darkMode ? "dark" : "light");
+    } catch {
+      // The toggle still works when browser storage is unavailable.
+    }
+  }, [darkMode]);
   useEffect(() => setMobileOpen(false), [path]);
   return (
     <header className="site-header">
@@ -89,18 +125,63 @@ export function Header({ path }: { path: string }) {
           <Brand />
         </SiteLink>
         <nav className="desktop-nav" aria-label="Primary navigation">
-          {primaryLinks.map((link) => (
-            <SiteLink
-              key={link.href}
-              href={link.href}
-              className={
-                path.startsWith(link.href) ? "nav-link active" : "nav-link"
-              }
-              aria-current={path.startsWith(link.href) ? "page" : undefined}
-            >
-              {link.label}
-            </SiteLink>
-          ))}
+          {primaryLinks.map((link) =>
+            link.href === "/product" ? (
+              <div className="platform-nav" key={link.href}>
+                <SiteLink
+                  href="/product"
+                  className={
+                    path === "/product" ||
+                    platformLinks.some((item) => path.startsWith(item.href))
+                      ? "nav-link active"
+                      : "nav-link"
+                  }
+                  aria-current={path === "/product" ? "page" : undefined}
+                >
+                  Platform
+                </SiteLink>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="nav-link platform-menu-trigger"
+                      aria-label="Explore platform"
+                    >
+                      <ChevronDown size={12} />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="resource-menu platform-menu"
+                  >
+                    {platformLinks.map(({ icon: Icon, ...item }) => (
+                      <DropdownMenuItem asChild key={item.href}>
+                        <SiteLink href={item.href} className="resource-item">
+                          <Icon size={18} />
+                          <span>
+                            <strong>{item.label}</strong>
+                            <small>{item.detail}</small>
+                          </span>
+                          <ArrowRight size={14} />
+                        </SiteLink>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <SiteLink
+                key={link.href}
+                href={link.href}
+                className={
+                  path.startsWith(link.href) ? "nav-link active" : "nav-link"
+                }
+                aria-current={path.startsWith(link.href) ? "page" : undefined}
+              >
+                {link.label}
+              </SiteLink>
+            ),
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -127,15 +208,19 @@ export function Header({ path }: { path: string }) {
           </DropdownMenu>
         </nav>
         <div className="header-actions">
-          <a
-            className="github-link"
-            href="https://github.com/nexusobserve/nexusobserve"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="NexusObserve on GitHub"
+          <Button
+            variant="outline"
+            className="theme-toggle"
+            onClick={() => setDarkMode((current) => !current)}
+            aria-label={
+              darkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
+            aria-pressed={darkMode}
+            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
-            <Github size={18} />
-          </a>
+            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+            <span>{darkMode ? "Light" : "Dark"}</span>
+          </Button>
           <Button asChild size="sm" className="nav-cta">
             <SiteLink href="/downloads">
               Get started <ArrowRight size={14} />
@@ -162,7 +247,12 @@ export function Header({ path }: { path: string }) {
                 </SheetDescription>
               </SheetHeader>
               <nav aria-label="Mobile navigation">
-                {[...primaryLinks, ...resourceLinks].map((link) => (
+                {[
+                  primaryLinks[0],
+                  ...platformLinks,
+                  ...primaryLinks.slice(1),
+                  ...resourceLinks,
+                ].map((link) => (
                   <SiteLink
                     key={link.href}
                     href={link.href}
@@ -205,18 +295,10 @@ export function Footer() {
             <br />
             Keep your telemetry close.
           </p>
-          <a
-            href="https://github.com/nexusobserve/nexusobserve"
-            target="_blank"
-            rel="noreferrer"
-            className="footer-github"
-          >
-            <Github size={16} /> Built in the open <ArrowRight size={13} />
-          </a>
         </div>
         <div className="footer-column">
           <span>Platform</span>
-          {primaryLinks.map((link) => (
+          {platformLinks.map((link) => (
             <SiteLink key={link.href} href={link.href}>
               {link.label}
             </SiteLink>
@@ -235,8 +317,10 @@ export function Footer() {
           <span>Start here</span>
           <SiteLink href="/docs/quickstart">Quick start</SiteLink>
           <SiteLink href="/docs/production">Production deployment</SiteLink>
-          <SiteLink href="/docs/agent">Native agent</SiteLink>
-          <SiteLink href="/opentelemetry/sources">Data sources</SiteLink>
+          <SiteLink href="/docs/agent">Agent setup</SiteLink>
+          <SiteLink href="/docs/plugins">Plugin setup</SiteLink>
+          <SiteLink href="/industries">Solutions</SiteLink>
+          <SiteLink href="/compare">Compare platforms</SiteLink>
         </div>
       </div>
       <div className="footer-bottom">

@@ -21,6 +21,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Card } from "./ui/card";
 import { Brand } from "./SiteChrome";
 import { SiteLink } from "@/lib/navigation";
 
@@ -72,17 +73,21 @@ export function LatencyChart({ compact = false }: { compact?: boolean }) {
           y2="165"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#9b73f6" stopOpacity=".22" />
-          <stop offset="1" stopColor="#9b73f6" stopOpacity="0" />
+          <stop stopColor="var(--chart-purple)" stopOpacity=".22" />
+          <stop offset="1" stopColor="var(--chart-purple)" stopOpacity="0" />
         </linearGradient>
       </defs>
       {[25, 65, 105, 145].map((y, i) => (
         <g key={y}>
-          <path d={`M35 ${y}H555`} stroke="#292432" strokeDasharray="3 5" />
+          <path
+            d={`M35 ${y}H555`}
+            stroke="var(--border)"
+            strokeDasharray="3 5"
+          />
           <text
             x="0"
             y={y + 4}
-            fill="#766e86"
+            fill="var(--text-muted)"
             fontSize="9"
             fontFamily="Inter Variable, sans-serif"
           >
@@ -96,13 +101,13 @@ export function LatencyChart({ compact = false }: { compact?: boolean }) {
       />
       <path
         d="M35 116 47 118 59 104 71 112 83 107 95 114 107 102 119 110 131 99 143 109 155 97 167 110 179 101 191 94 203 107 215 95 227 104 239 90 251 97 263 81 275 97 287 90 299 104 311 71 323 83 335 39 347 60 359 30 371 51 383 23 395 64 407 51 419 84 431 91 443 81 455 95 467 88 479 104 491 93 503 100 515 88 527 101 539 95 555 99"
-        stroke="#a184f4"
+        stroke="var(--chart-purple)"
         strokeWidth="2"
         strokeLinejoin="round"
       />
       <path
         d="M35 133 59 128 83 134 107 129 131 132 155 126 179 131 203 124 227 132 251 128 275 124 299 129 323 122 347 127 371 121 395 126 419 130 443 123 467 129 491 126 515 130 539 125 555 128"
-        stroke="#69b8b4"
+        stroke="var(--success-text)"
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
@@ -111,7 +116,7 @@ export function LatencyChart({ compact = false }: { compact?: boolean }) {
           key={x}
           x={x}
           y="162"
-          fill="#766e86"
+          fill="var(--text-muted)"
           fontSize="9"
           fontFamily="Inter Variable, sans-serif"
         >
@@ -131,17 +136,17 @@ export function ServiceMap({ small = false }: { small?: boolean }) {
       <svg viewBox="0 0 350 190" fill="none" aria-hidden="true">
         <path
           d="M70 95H165M175 90 273 43M175 95H273M175 100 273 147"
-          stroke="#574574"
+          stroke="var(--border-strong)"
           strokeWidth="1.3"
         />
         <path
           d="M70 95H165M175 90 273 43M175 95H273M175 100 273 147"
-          stroke="#9573d9"
+          stroke="var(--chart-purple)"
           strokeWidth="1.3"
           strokeDasharray="3 15"
           className="flow-path"
         />
-        <circle cx="110" cy="95" r="2.5" fill="#bd9efd" />
+        <circle cx="110" cy="95" r="2.5" fill="var(--accent-bright)" />
       </svg>
       <span className="map-node browser">
         <Box size={17} />
@@ -333,7 +338,7 @@ export function ProductPreview() {
                   icon: TriangleAlert,
                 },
               ].map((metric, i) => (
-                <div className="preview-metric" key={metric.label}>
+                <Card className="preview-metric" key={metric.label}>
                   <span>
                     {metric.label}
                     <metric.icon size={13} />
@@ -350,11 +355,11 @@ export function ProductPreview() {
                     {i === 2 ? <ArrowDownRight size={11} /> : <i />}
                     {metric.note}
                   </span>
-                </div>
+                </Card>
               ))}
             </div>
             <div className="preview-chart-grid">
-              <div className="preview-panel">
+              <Card className="preview-panel">
                 <div className="preview-panel-heading">
                   <h4>Service latency</h4>
                   <div className="chart-legend">
@@ -369,8 +374,8 @@ export function ProductPreview() {
                   </div>
                 </div>
                 <LatencyChart />
-              </div>
-              <div className="preview-panel topology-panel">
+              </Card>
+              <Card className="preview-panel topology-panel">
                 <div className="preview-panel-heading">
                   <h4>Service topology</h4>
                   <span className="topology-live">
@@ -379,9 +384,9 @@ export function ProductPreview() {
                   </span>
                 </div>
                 <ServiceMap />
-              </div>
+              </Card>
             </div>
-            <div className="preview-panel preview-services">
+            <Card className="preview-panel preview-services">
               <div className="preview-panel-heading">
                 <h4>Your services</h4>
                 <SiteLink href="/product">
@@ -390,7 +395,7 @@ export function ProductPreview() {
                 </SiteLink>
               </div>
               <ServiceTable />
-            </div>
+            </Card>
           </TabsContent>
           <TabsContent value="services" className="preview-content">
             <div className="preview-page-heading">
